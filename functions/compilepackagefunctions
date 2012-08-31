@@ -1,0 +1,107 @@
+#!/bin/zsh
+# Declare colours for easy access
+GREEN='\e[1;32m'
+RED='\e[1;31m'
+YELLOW='\e[1;33m'
+WHITE='\e[1;37m'
+COLRESET='\e[0m'
+
+# Unset problematic variableo, and reset _built
+unset _built
+unset epoch
+
+# cd to build directory, download PKGBUILD, show for editing, then automatically build package
+function normalbuild () {
+  vim PKGBUILD && sudo extra-x86_64-build && _built=true
+}
+
+function multibuild {
+  vim PKGBUILD && sudo multilib-build && _built=true
+}
+
+function getsources {
+  cd ~/builds
+  echo "${YELLOW}==>${WHITE} Downloading sources${COLRESET}"
+  yaourt -G $1
+  if [ -d $1 ]; then
+    cd $1
+  else
+    echo "${RED}==> ERROR:${WHITE} No such package${COLRESET}"
+    return 1
+  fi
+  if [[ $2 == "get" ]]; then
+    getpkgbuild $1
+  fi
+}
+
+function getpkgbuild {
+    echo "${YELLOW}==>${WHITE} Getting latest PKGBUILD${COLRESET}"
+    wget -q -O PKGBUILD "https://projects.archlinux.org/svntogit/packages.git/plain/trunk/PKGBUILD?h=packages/$1" ||
+      wget -q -O PKGBUILD "https://projects.archlinux.org/svntogit/community.git/plain/trunk/PKGBUILD?h=packages/$1" ||
+      wget -q -O PKGBUILD "https://aur.archlinux.org/packages/${1:0:2}/$1/PKGBUILD" ||
+      echo "${RED}==> ERROR:${WHITE} PKGBUILD not found in \"package\" or \"community\" git repos or AUR${COLRESET}"
+
+}
+
+# If build was successful
+function postbuild {
+  if [ $_built ]; then
+    unset all
+    # Load PKGBUILD variables
+    source PKGBUILD &> /dev/null
+
+    # Check for package archetecture
+    if [[ $arch != "any" ]]; then
+      arch=$(uname -m)
+    fi
+
+    # Check for svn packages
+    if [ $(echo $pkgname | grep "\-svn$") ]; then
+      # TODO: recreate version info to correspond to svn version
+      echo "${YELLOW}==>${WHITE} Compilation complete. SVN package detected, please install manually${COLRESET}"
+      return 0
+    fi
+
+    # If git package, will have date as _ver
+    if [ $(echo $pkgname | grep "\-git$") ]; then
+      date=$(date +%Y%m%d)
+      _ver=${date}-${pkgrel}-${arch}.pkg.tar.xz
+    else
+      # Otherwise declare _ver as normal
+      _ver=${pkgver}-${pkgrel}-${arch}.pkg.tar.xz
+    fi
+
+    # Check for epoch var, and add to _ver if present
+    if [ $epoch ] && _ver=${epoch}:${_ver}
+
+    # Check for multi-package
+    if [[ $(echo $pkgname | wc -w) -gt 1 ]]; then
+      # Add package names to array
+      x=1
+      foreach i in $pkgname; do
+        all[${x}]=${i}-${_ver}
+        x=$((x+1))
+      done
+      # Check first package exists, confirm completion, and prompt user to install
+      [ -f ${pkgname[1]}-${_ver} ] && echo "${GREEN}==>${WHITE} Compilation complete. Multiple packages detected. Names stored in \$all${COLRESET}"
+      return 0
+    fi
+
+    # Declare _pkg for easy installation/copying
+    _pkg=${pkgname}-${_ver}
+  
+    # Check package exists, confirm completion, and prompt user to install
+    [ -f ${_pkg} ] && echo "${GREEN}==>${WHITE} Compilation complete, installing...${COLRESET}" && yaourt -U ${_pkg}
+    return 0
+  fi
+}
+
+function getfiles {
+  _rawhtml=$(wget -qO - "https://projects.archlinux.org/svntogit/packages.git/plain/trunk/?h=packages/$1" || wget -qO - "https://projects.archlinux.org/svntogit/community.git/plain/trunk/?h=packages/$1")
+  if [ ! $_rawhtml ] && return 1
+  _filelist=$(echo $_rawhtml|grep "\<li\>" | sed 1d | cut -d "'" -f 2)
+  for _file in $(echo $_filelist); do
+    _filename=$(echo $file | cut -d "/" -f 6 | sed 's:\?.*::'
+    wget -O - "https://projects.archlinux.org/$_file" > $_filenam
+  done
+}
