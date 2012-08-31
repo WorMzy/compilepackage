@@ -11,7 +11,7 @@ fi
 if [[ $1 == "-n" ]]; then
   getsources $2 get
 elif [[ $1 == "-s" ]]; then
-  getsources $2 get
+  getfiles $2
   normalbuild $2
   postbuild
 else

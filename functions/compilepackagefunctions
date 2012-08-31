@@ -97,11 +97,13 @@ function postbuild {
 }
 
 function getfiles {
-  _rawhtml=$(wget -qO - "https://projects.archlinux.org/svntogit/packages.git/plain/trunk/?h=packages/$1" || wget -qO - "https://projects.archlinux.org/svntogit/community.git/plain/trunk/?h=packages/$1")
+  cd ~/builds
+  echo "${YELLOW}==>${WHITE} Downloading sources${COLRESET}"
+  _rawhtml=$(wget -q -O - "https://projects.archlinux.org/svntogit/packages.git/plain/trunk/?h=packages/$1" || wget -q -O - "https://projects.archlinux.org/svntogit/community.git/plain/trunk/?h=packages/$1")
   if [ ! $_rawhtml ] && return 1
-  _filelist=$(echo $_rawhtml|grep "\<li\>" | sed 1d | cut -d "'" -f 2)
+  _filelist=$(echo $_rawhtml | grep "\<li\>" | sed 1d | cut -d "'" -f 2)
   for _file in $(echo $_filelist); do
-    _filename=$(echo $file | cut -d "/" -f 6 | sed 's:\?.*::'
-    wget -O - "https://projects.archlinux.org/$_file" > $_filenam
+    _filename=$(echo $_file | cut -d "/" -f 6 | sed 's:\?.*::')
+    wget -q -O - "https://projects.archlinux.org/$_file" > $_filename
   done
 }
