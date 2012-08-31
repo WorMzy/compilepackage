@@ -102,6 +102,12 @@ function getfiles {
   _rawhtml=$(wget -q -O - "https://projects.archlinux.org/svntogit/packages.git/plain/trunk/?h=packages/$1" || wget -q -O - "https://projects.archlinux.org/svntogit/community.git/plain/trunk/?h=packages/$1")
   if [ ! $_rawhtml ] && return 1
   _filelist=$(echo $_rawhtml | grep "\<li\>" | sed 1d | cut -d "'" -f 2)
+  if [ -d $1 ]; then
+    cd $1
+  else
+    mkdir $1
+    cd $1
+  fi
   for _file in $(echo $_filelist); do
     _filename=$(echo $_file | cut -d "/" -f 6 | sed 's:\?.*::')
     wget -q -O - "https://projects.archlinux.org/$_file" > $_filename
