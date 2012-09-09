@@ -1,6 +1,10 @@
 #!/bin/zsh
 source ~/.scripts/functions/compilepackagefunctions
 
+_build="normalbuild"
+
+[ $(basename $0) = "compilemultipackage" ] && _build="multibuild"
+
 # Check for package name
 if [[ $# -eq 0 ]]; then
   # Exit if not present
@@ -10,14 +14,14 @@ fi
 
 if [[ $1 == "-n" ]]; then
   getsources $2 skip
-  normalbuild $2
+  $_build $2
   postbuild
 elif [[ $1 == "-s" ]]; then
   getfiles $2
-  normalbuild $2
+  $_build $2
   postbuild
 else
   getsources $1
-  normalbuild $1
+  $_build $1
   postbuild
 fi
