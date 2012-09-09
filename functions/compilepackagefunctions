@@ -120,6 +120,7 @@ function getfiles {
   fi
   for _file in $(echo $_filelist); do
     _filename=$(echo $_file | cut -d "/" -f 6 | sed 's:\?.*::')
-    wget -q -O - "https://projects.archlinux.org/$_file" > $_filename
+    rm -f $_filename
+    curl -s -O "https://projects.archlinux.org/$_file" > $_filename
   done
 }
