@@ -3,7 +3,7 @@ source ~/.scripts/functions/compilepackagefunctions
 
 _build="normalbuild"
 
-[ $(basename $0) = "compilemultipackage" ] && _build="multibuild"
+[[ $(basename $0) == "compilemultipackage" ]] && _build="multibuild"
 
 # Check for package name
 if [[ $# -eq 0 ]]; then
