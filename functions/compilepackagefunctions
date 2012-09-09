@@ -31,27 +31,28 @@ function multibuild {
 
 function getsources {
   cd ~/builds
-  echo "${YELLOW}==>${WHITE} Downloading sources${COLRESET}"
-  yaourt -G $1
+  if [[ ! $2 == "skip" ]]; then
+    echo "${YELLOW}==>${WHITE} Downloading sources${COLRESET}"
+    yaourt -G $1
+  fi
   if [ -d $1 ]; then
     cd $1
   else
     echo "${RED}==> ERROR:${WHITE} No such package${COLRESET}"
     return 1
   fi
-  if [[ $2 == "get" ]]; then
-    getpkgbuild $1
-  fi
+  #if [[ $2 == "get" ]]; then
+  #  getpkgbuild $1
+  #fi
 }
 
-function getpkgbuild {
-    echo "${YELLOW}==>${WHITE} Getting latest PKGBUILD${COLRESET}"
-    wget -q -O PKGBUILD "https://projects.archlinux.org/svntogit/packages.git/plain/trunk/PKGBUILD?h=packages/$1" ||
-      wget -q -O PKGBUILD "https://projects.archlinux.org/svntogit/community.git/plain/trunk/PKGBUILD?h=packages/$1" ||
-      wget -q -O PKGBUILD "https://aur.archlinux.org/packages/${1:0:2}/$1/PKGBUILD" ||
-      echo "${RED}==> ERROR:${WHITE} PKGBUILD not found in \"package\" or \"community\" git repos or AUR${COLRESET}"
-
-}
+#function getpkgbuild {
+#    echo "${YELLOW}==>${WHITE} Getting latest PKGBUILD${COLRESET}"
+#    wget -q -O PKGBUILD "https://projects.archlinux.org/svntogit/packages.git/plain/trunk/PKGBUILD?h=packages/$1" ||
+#      wget -q -O PKGBUILD "https://projects.archlinux.org/svntogit/community.git/plain/trunk/PKGBUILD?h=packages/$1" ||
+#      wget -q -O PKGBUILD "https://aur.archlinux.org/packages/${1:0:2}/$1/PKGBUILD" ||
+#      echo "${RED}==> ERROR:${WHITE} PKGBUILD not found in \"package\" or \"community\" git repos or AUR${COLRESET}"
+#}
 
 # If build was successful
 function postbuild {
