@@ -1,5 +1,5 @@
 #!/bin/zsh
-source ~/.scripts/functions/compilepackagefunctions
+source functions/compilepackagefunctions
 
 _build="normalbuild"
 
