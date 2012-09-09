@@ -12,11 +12,21 @@ unset epoch
 
 # cd to build directory, download PKGBUILD, show for editing, then automatically build package
 function normalbuild () {
-  vim PKGBUILD && sudo extra-x86_64-build && _built=true
+  if [ -e PKGBUILD ]; then
+    vim PKGBUILD && sudo extra-x86_64-build && _built=true
+  else
+    echo "${RED}==>${WHITE} No PKGBUILD found${COLRESET}"
+    return 1
+  fi
 }
 
 function multibuild {
-  vim PKGBUILD && sudo multilib-build && _built=true
+  if [ -e PKGBUILD ]; then
+    vim PKGBUILD && sudo multilib-build && _built=true
+  else
+    echo "${RED}==>${WHITE} No PKGBUILD found${COLRESET}"
+    return 1
+  fi
 }
 
 function getsources {
