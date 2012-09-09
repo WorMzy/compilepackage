@@ -109,7 +109,7 @@ function postbuild {
 function getfiles {
   cd ~/builds
   echo "${YELLOW}==>${WHITE} Downloading sources${COLRESET}"
-  _rawhtml=$(wget -q -O - "https://projects.archlinux.org/svntogit/packages.git/plain/trunk/?h=packages/$1" || wget -q -O - "https://projects.archlinux.org/svntogit/community.git/plain/trunk/?h=packages/$1")
+  _rawhtml=$(curl -s -f "https://projects.archlinux.org/svntogit/packages.git/plain/$1/trunk/" || curl -s -f "https://projects.archlinux.org/svntogit/community.git/plain/$1/trunk/")
   if [ ! $_rawhtml ] && return 1
   _filelist=$(echo $_rawhtml | grep "\<li\>" | sed 1d | cut -d "'" -f 2)
   if [ -d $1 ]; then
