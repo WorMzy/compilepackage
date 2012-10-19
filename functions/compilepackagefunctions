@@ -83,7 +83,7 @@ function postbuild {
     fi
 
     # Check for epoch var, and add to _ver if present
-    if [ $epoch ] && _ver=${epoch}:${_ver}
+    [ $epoch ] && _ver=${epoch}:${_ver}
 
     # Check for multi-package
     if [[ $(echo $pkgname | wc -w) -gt 1 ]]; then
