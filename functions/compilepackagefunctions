@@ -102,7 +102,13 @@ function postbuild {
     _pkg=${pkgname}-${_ver}
   
     # Check package exists, confirm completion, and prompt user to install
-    [ -f ${_pkg} ] && echo "${GREEN}==>${WHITE} Compilation complete, installing...${COLRESET}" && yaourt -U ${_pkg}
+    if [ -f ${_pkg} ]; then
+      echo "${GREEN}==>${WHITE} Compilation complete, installing...${COLRESET}"
+      sudo pacman -U ${_pkg}
+    else
+      echo "${RED}==>${WHITE} Could not find '${_pkg}', install manually${COLRESET}"
+      return 1
+    fi
     return 0
   fi
 }
