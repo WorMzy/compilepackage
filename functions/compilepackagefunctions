@@ -6,7 +6,7 @@ YELLOW='\e[1;33m'
 WHITE='\e[1;37m'
 COLRESET='\e[0m'
 
-# Unset problematic variableo, and reset _built
+# Unset problematic variables, and reset _built
 unset _built
 unset epoch
 
