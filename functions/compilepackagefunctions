@@ -6,6 +6,9 @@ YELLOW='\e[1;33m'
 WHITE='\e[1;37m'
 COLRESET='\e[0m'
 
+# Set EDITOR to user default, falling back on vi
+EDITOR=${EDITOR:-/usr/bin/vi}
+
 # Unset problematic variables, and reset _built
 unset _built
 unset epoch
@@ -13,7 +16,7 @@ unset epoch
 # cd to build directory, download PKGBUILD, show for editing, then automatically build package
 function normalbuild () {
   if [ -e PKGBUILD ]; then
-    vim PKGBUILD && sudo extra-x86_64-build && _built=true
+    "${EDITOR}" PKGBUILD && sudo extra-x86_64-build && _built=true
   else
     echo "${RED}==>${WHITE} No PKGBUILD found${COLRESET}"
     return 1
@@ -22,7 +25,7 @@ function normalbuild () {
 
 function multibuild {
   if [ -e PKGBUILD ]; then
-    vim PKGBUILD && sudo multilib-build && _built=true
+    "${EDITOR}" PKGBUILD && sudo multilib-build && _built=true
   else
     echo "${RED}==>${WHITE} No PKGBUILD found${COLRESET}"
     return 1
