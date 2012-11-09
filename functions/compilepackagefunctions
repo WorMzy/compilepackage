@@ -50,13 +50,11 @@ function getsources {
 function postbuild {
   # If DISPLAY is set and notify-send is installed, send an "urgent" notification
   # that compilation has finished, either successfully or otherwise.
-  echo "DISPLAY: $DISPLAY"
   if [ $DISPLAY ]; then
-    echo "where notify-send: \"$(where notify-send)\""
     if [ -x "$(where notify-send)" ]; then
       STATUS="FAILED"
       [ $_built ] && STATUS="SUCCESS"
-      notify-send -u critical -a firefox -i firefox "Compilation of package $1 is now complete. Compilation ${STATUS}!"
+      notify-send -u critical -a xfce4-notifyd -i xfce4-notifyd "Compilation of package $1 is now complete. Compilation ${STATUS}!"
     fi
   fi
       
