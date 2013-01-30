@@ -15,13 +15,13 @@ fi
 if [[ $1 == "-n" ]]; then
   getsources $2 skip
   $_build $2
-  postbuild
+  postbuild $2
 elif [[ $1 == "-s" ]]; then
   getfiles $2
   $_build $2
-  postbuild
+  postbuild $2
 else
   getsources $1
   $_build $1
-  postbuild
+  postbuild $1
 fi
