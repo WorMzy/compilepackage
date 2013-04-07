@@ -78,7 +78,7 @@ function postbuild {
     # If git package, will have date as _ver and pkgrel will always be "1"
     if [ $(echo $pkgname | grep "\-git$") ]; then
       pkgrel=1
-      date=$(date +%Y%m%d)
+      date=$(date -u +%Y%m%d)
       _ver=${date}-${pkgrel}-${arch}.pkg.tar.xz
     else
       # Otherwise declare _ver as normal
