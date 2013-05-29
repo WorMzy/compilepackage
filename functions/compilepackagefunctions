@@ -68,22 +68,8 @@ function postbuild {
       arch=$(uname -m)
     fi
 
-    # Check for svn packages
-    if [ $(echo $pkgname | grep "\-svn$") ]; then
-      # TODO: recreate version info to correspond to svn version
-      echo "${YELLOW}==>${WHITE} Compilation complete. SVN package detected, please install manually${COLRESET}"
-      return 0
-    fi
-
-    # If git package, will have date as _ver and pkgrel will always be "1"
-    if [ $(echo $pkgname | grep "\-git$") ]; then
-      pkgrel=1
-      date=$(date -u +%Y%m%d)
-      _ver=${date}-${pkgrel}-${arch}.pkg.tar.xz
-    else
-      # Otherwise declare _ver as normal
-      _ver=${pkgver}-${pkgrel}-${arch}.pkg.tar.xz
-    fi
+    # Create _ver
+    _ver=${pkgver}-${pkgrel}-${arch}.pkg.tar.xz
 
     # Check for epoch var, and add to _ver if present
     [ $epoch ] && _ver=${epoch}:${_ver}
