@@ -93,8 +93,6 @@ function postbuild {
     # Check package exists, confirm completion, and prompt user to install
     if [ -f ${_pkg} ]; then
       echo "${GREEN}==>${WHITE} Compilation complete, installing...${COLRESET}"
-      term="/dev/$(ps -p$$ -o tty="")"
-      exec < $term
       sudo pacman -U ${_pkg}
     else
       echo "${RED}==>${WHITE} Could not find '${_pkg}', install manually${COLRESET}"
