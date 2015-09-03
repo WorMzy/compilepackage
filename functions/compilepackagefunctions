@@ -36,7 +36,24 @@ function getsources {
   cd ~/builds
   if [[ ! $2 == "skip" ]]; then
     echo "${YELLOW}==>${WHITE} Downloading sources${COLRESET}"
-    yaourt -G $1
+    if [[ -d $1 ]]; then
+      read -q "response?Directory '$1' already exists, overwrite? y/N "
+      if [[ $response == "y" ]]; then
+        # Check if $1 is in the repos
+        # TODO: Circumvent this if not in official repos
+        if pacman -Si $1 &>/dev/null; then
+          asp -f export $1
+        else
+          cower --ignorerepo=all -df $1
+        fi
+      fi
+    else
+      if pacman -Si $1 &>/dev/null; then
+        asp export $1
+      else
+        cower --ignorerepo=all -d $1
+      fi
+    fi
   fi
   if [ -d $1 ]; then
     cd $1
@@ -77,6 +94,7 @@ function postbuild {
     # Check for multi-package
     if [[ $(echo $pkgname | wc -w) -gt 1 ]]; then
       # Add package names to array
+      # #TODO: Fix $all when packages have different archs (e.g. i686 and any)
       x=1
       foreach i in $pkgname; do
         all[${x}]=${i}-${_ver}
