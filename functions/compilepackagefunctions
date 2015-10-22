@@ -44,14 +44,14 @@ function getsources {
         if pacman -Si $1 &>/dev/null; then
           asp -f export $1
         else
-          cower --ignorerepo=all -df $1
+          cower --ignorerepo -df $1
         fi
       fi
     else
       if pacman -Si $1 &>/dev/null; then
         asp export $1
       else
-        cower --ignorerepo=all -d $1
+        cower --ignorerepo -d $1
       fi
     fi
   fi
