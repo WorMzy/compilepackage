@@ -50,20 +50,18 @@ function getsources {
     infomsg "Downloading sources"
     if [[ -d $1 ]]; then
       read -q "response?Directory '$1' already exists, overwrite? y/N "
+      echo
       if [[ $response == "y" ]]; then
-        # Check if $1 is in the repos
-        # TODO: Circumvent this if not in official repos
-        if pacman -Si $1 &>/dev/null; then
-          asp -f export $1
-        else
-          cower --ignorerepo=all -df $1
+        # Check if $1 is in the repos, otherwise fallback to AUR
+        if ! asp -f export $1 2>/dev/null; then
+          cower --ignorerepo -df $1 2>/dev/null
         fi
       fi
     else
       if pacman -Si $1 &>/dev/null; then
         asp export $1
       else
-        cower --ignorerepo=all -d $1
+        cower --ignorerepo -d $1
       fi
     fi
   fi

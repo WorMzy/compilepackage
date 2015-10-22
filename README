@@ -4,10 +4,10 @@ Prerequisites:
 
 - You must have the following installed:
  - Arch Linux (duh)
- - yaourt (for retrieval of both ABS and AUR PKGBUILDS)
+ - asp (for retrieval of ABS PKGBUILDS)
+ - cower (for retrieval of AUR PKGBUILDS)
  - devtools (for making and maintaining a clean chroot)
  - curl (you should have this installed anyway, it's a dependency of pacman)
- - vim (the script should soon use $EDITOR if it is set, until then, it is required unless you change it yourself)
  - sudo (for running devtools scripts, and installing packages -- asuming you're not running the scrpt as root)
 
 - You may need the following installed:
@@ -27,5 +27,5 @@ Normal usage:
 
 Extended usage:
   The script currently has two switches:
-  -s   Sync sources from git repos. This option makes the script download files from the Arch repos, rather than the ABS mirror (which only syncs the git repos once a day). This option is slow, and should be used sparingly. It will fail if the package is an AUR package.
+  -s   Sync sources from git repos. This option makes the script download files from the Arch repos, rather than the ABS mirror (which only syncs the git repos once a day). This option is slow, and should be used sparingly. It will fail if the package is an AUR package. (May no longer be needed since asp is now being used)
   -n   No source download. Makes the script skip downloading the PKGBUILD and related source files, speeding up the rebuilding of a recently built package, or a -git package.
