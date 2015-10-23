@@ -8,7 +8,7 @@ _build="normalbuild"
 # Check for package name
 if [[ $# -eq 0 ]]; then
   # Exit if not present
-  echo "${RED}==>${WHITE} You must specify a package${COLRESET}"
+  errmsg "You must specify a package"
   return 1
 fi
 
